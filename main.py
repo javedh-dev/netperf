@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from influxdb_client.client.write_api import SYNCHRONOUS
 from schema import Schema, And, Use, SchemaError
 import iperf3
