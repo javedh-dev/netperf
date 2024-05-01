@@ -1,0 +1,4 @@
+iperf3
+influxdb-client
+pyyaml
+schema

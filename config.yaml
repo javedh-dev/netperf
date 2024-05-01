@@ -1,0 +1,30 @@
+influx:
+  url: "http://10.10.3.3:8086"
+  token: "-NEIYk4QEji8m3cxSqBAt3QIjs06H1TBKa4UkkqtsHKHkz5tOps0ivSPFw9arIf7a1pIA056OxmpAfKZ6_FPvw=="
+  org: "homelab"
+  bucket: "networking"
+
+iperf:
+  name: code-servers
+  interval: 30
+  servers:
+    - name: storm 
+      address: 10.10.1.1
+      port: 5201
+      duration: 2
+    - name: nemo
+      address: 10.10.2.1
+      port: 5201
+      duration: 2
+    - name: zoro 
+      address: 10.10.3.1
+      port: 5201
+      duration: 2
+    - name: omv 
+      address: 10.10.4.1
+      port: 5201
+      duration: 2
+    - name: goku
+      address: 10.10.5.1
+      port: 5201
+      duration: 2
