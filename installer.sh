@@ -16,8 +16,8 @@ ensure_package_installed() {
     local package_name=$1
     if ! dpkg -l | grep -q "^ii\s*$package_name\s"; then
         echo "[=] Installing $package_name..."
-        sudo apt update
-        sudo DEBIAN_FRONTEND=noninteractive apt install -y $package_name
+        apt update
+        DEBIAN_FRONTEND=noninteractive apt install -y $package_name
         echo "[+] $package_name installed successfully."
     else
         echo "[=] $package_name is already installed."
@@ -35,15 +35,15 @@ clone_github_repo() {
 install_service_file() {
     local service_file=$1
     local service_dir="/etc/systemd/system/"
-    sudo cp $service_file $service_dir
+    cp $service_file $service_dir
 }
 
 # Function to install an executable
 install_executable() {
     local executable=$1
     local executable_dir="/usr/local/bin/"
-    sudo cp $executable "$executable_dir/netperf.py"
-    sudo chmod +x "$executable_dir/netperf.py"
+    cp $executable "$executable_dir/netperf.py"
+    chmod +x "$executable_dir/netperf.py"
 }
 
 # Function to enable and start a systemd service
@@ -51,10 +51,10 @@ enable_and_start_service() {
     local service_name=$1
 
     # Enable the service
-    sudo systemctl enable $service_name
+    systemctl enable $service_name
 
     # Start the service
-    sudo systemctl start $service_name
+    systemctl start $service_name
 
     echo "[+] $service_name enabled and started."
 }
@@ -99,7 +99,7 @@ main() {
         echo "[!] Unsupported distribution for package installation!!!"
         exit 1
     fi
-    sudo apt update
+    apt update
     # Ensure required packages are installed
     for package in "${package_names[@]}"; do
         ensure_package_installed $package
