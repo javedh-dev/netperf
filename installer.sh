@@ -46,6 +46,19 @@ install_executable() {
     sudo chmod +x "$executable_dir/netperf.py"
 }
 
+# Function to enable and start a systemd service
+enable_and_start_service() {
+    local service_name=$1
+
+    # Enable the service
+    sudo systemctl enable $service_name
+
+    # Start the service
+    sudo systemctl start $service_name
+
+    echo "[+] $service_name enabled and started."
+}
+
 # Function to create a virtual environment and install requirements
 create_virtualenv() {
     local venv_name=$1
@@ -71,8 +84,10 @@ main() {
     local service_file="./source/netperf.service"
     local executable="./source/main.py"
     local package_names=("python3" "iperf3" "git" "python3-venv" "python3-pip")
+    local service_names=("iperf3","netperf")
     local venv_name=".venv"
     local requirements_file="requirements.txt"
+    DEBIAN_FRONTEND=noninteractive 
 
     mkdir -p $work_dir
     rm -rf $work_dir/*
@@ -102,8 +117,10 @@ main() {
     # Create and activate virtual environment, install requirements, then deactivate
     create_virtualenv $venv_name $requirements_file
 
-    # Reload systemd to load the new service
-    sudo systemctl daemon-reload
+    # Ensure required packages are installed
+    for service in "${service_names[@]}"; do
+        ensure_package_installed $service
+    done
 
     echo "[+] Service, executable, and virtual environment created successfully."
 }
