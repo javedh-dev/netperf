@@ -6,6 +6,7 @@ import iperf3
 import influxdb_client
 import time
 import yaml
+import logging
 
 
 schema = Schema(
@@ -69,7 +70,7 @@ def gather_stats():
         result = client.run()
         del client
 
-        print("Pushing data for server ", "'", server["name"], "'", sep='')
+        logger.debug("Pushing data for server '%s'", server["name"])
         record = (
             influxdb_client.Point("speed")
             .tag("source", config["iperf"]["name"])
@@ -79,34 +80,41 @@ def gather_stats():
         )
         write_to_db(record)
 
-def validate_config():
-    pass
-
+def setup_logging():
+    global logger 
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    stream_handler = logging.StreamHandler()
+    file_handler = logging.FileHandler('netperf.log')
+    stream_handler.setLevel(logging.INFO)
+    file_handler.setLevel(logging.DEBUG)
+    logger.addHandler(stream_handler)
+    logger.addHandler(file_handler)
 
 
 def configure():
-    print("Configuring the netperf...")
     global config 
     global influx_write_api
     try:
+        setup_logging()
+        logger.info("Configuring the netperf...")
         config = get_config()
         influx_write_api = initialize_influx()
-        validate_config()
     except FileNotFoundError as e:
-        print("Please ensure that config.yaml file is present.", e)
+        logger.error("Please ensure that config.yaml file is present.", e)
     except SchemaError as e:
-        print("Validation failed : Please validate the schema for config.yaml file", e)
+        logger.error("Validation failed : Please validate the schema for config.yaml file", e)
     except Exception as e:
-        print("Runtime Error Occurred : ", e)
+        logger.error("Runtime Error Occurred : ", e)
 
 def start():
-    print("Starting the netperf stats collector...")
+    logger.info("Starting the netperf stats collector...")
     sleep_time = int(config['iperf']['interval']) - sum(map(lambda n: int(n['duration']),config['iperf']['servers']))
     while True:
-        print("-"*50)
+        logger.debug("-"*50)
         gather_stats()
-        print("-"*50)
-        print("Sleeping for ", sleep_time,"s.")
+        logger.debug("-"*50)
+        logger.debug("Sleeping for %ss.", sleep_time)
         time.sleep(sleep_time if sleep_time>=0 else 0)
 
 if __name__ == "__main__":

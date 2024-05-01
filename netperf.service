@@ -5,10 +5,9 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecBefore=/usr/share/netperf/.venv/bin/activate
-ExecStart=/usr/local/bin/netperf.py
+ExecStart=/usr/share/netperf/.venv/bin/python3 /usr/local/bin/netperf.py
 WorkingDirectory=/usr/share/netperf
-Restart=always
+Restart=on-success
 RestartSec=3
 
 [Install]
