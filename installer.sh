@@ -68,13 +68,14 @@ create_virtualenv() {
 main() {
     local repo_url="https://github.com/javedh-dev/netperf.git"
     local work_dir="/usr/share/netperf"
-    local service_file="source/netperf.service"
-    local executable="source/main.py"
+    local service_file="./source/netperf.service"
+    local executable="./source/main.py"
     local package_names=("python3" "iperf3" "git" "python3-venv" "python3-pip")
     local venv_name=".venv"
     local requirements_file="requirements.txt"
 
     mkdir -p $work_dir
+    rm -rf $work_dir/*
     cd $work_dir
 
     if is_debian_based; then
