@@ -75,7 +75,7 @@ main() {
     local work_dir="/usr/share/netperf"
     local service_file="netperf.service"
     local executable="main.py"
-    local package_names=("pyhton3", "iperf3", "git" "python3-venv" "python3-pip")
+    local package_names=("python3", "iperf3", "git" "python3-venv" "python3-pip")
     local venv_name=".venv"
     local requirements_file="requirements.txt"
 
