@@ -18,7 +18,7 @@ ensure_package_installed() {
         echo "[=] Installing $package_name..."
         apt update
         DEBIAN_FRONTEND=noninteractive apt install -y $package_name
-        echo "[+] $package_name installed successfully."
+        echo "[🗸] $package_name installed successfully."
     else
         echo "[=] $package_name is already installed."
     fi
@@ -56,7 +56,7 @@ enable_and_start_service() {
     # Start the service
     systemctl start $service_name
 
-    echo "[+] $service_name enabled and started."
+    echo "[🗸] $service_name enabled and started."
 }
 
 # Function to create a virtual environment and install requirements
@@ -124,7 +124,7 @@ main() {
         enable_and_start_service $service
     done
 
-    echo "[+] Service, executable, and virtual environment created successfully."
+    echo "[🗸] Service, executable, and virtual environment created successfully."
     rm -rf $work_dir/source
 
     echo "[🗸] Installation is successfull. Please update config file at '/usr/share/netperf/config.yaml' and Restart the services once done"
