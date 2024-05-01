@@ -119,7 +119,7 @@ main() {
 
     # Ensure required packages are installed
     for service in "${service_names[@]}"; do
-        ensure_package_installed $service
+        enable_and_start_service $service
     done
 
     echo "[+] Service, executable, and virtual environment created successfully."
