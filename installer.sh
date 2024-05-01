@@ -15,15 +15,10 @@ is_debian_based() {
 ensure_package_installed() {
     local package_name=$1
     if ! dpkg -l | grep -q "^ii\s*$package_name\s"; then
-        if is_debian_based; then
-            echo "[=] Installing $package_name..."
-            sudo apt update
-            sudo apt install -y $package_name
-            echo "[+] $package_name installed successfully."
-        else
-            echo "[=] Unsupported distribution for package installation."
-            exit 1
-        fi
+        echo "[=] Installing $package_name..."
+        sudo apt update
+        sudo apt install -y $package_name
+        echo "[+] $package_name installed successfully."
     else
         echo "[=] $package_name is already installed."
     fi
@@ -73,9 +68,9 @@ create_virtualenv() {
 main() {
     local repo_url="https://github.com/javedh-dev/netperf.git"
     local work_dir="/usr/share/netperf"
-    local service_file="netperf.service"
-    local executable="main.py"
-    local package_names=("python3", "iperf3", "git" "python3-venv" "python3-pip")
+    local service_file="source/netperf.service"
+    local executable="source/main.py"
+    local package_names=("python3" "iperf3" "git" "python3-venv" "python3-pip")
     local venv_name=".venv"
     local requirements_file="requirements.txt"
 
