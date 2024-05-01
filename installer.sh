@@ -17,7 +17,7 @@ ensure_package_installed() {
     if ! dpkg -l | grep -q "^ii\s*$package_name\s"; then
         echo "[=] Installing $package_name..."
         sudo apt update
-        sudo apt install -y $package_name
+        sudo DEBIAN_FRONTEND=noninteractive apt install -y $package_name
         echo "[+] $package_name installed successfully."
     else
         echo "[=] $package_name is already installed."
