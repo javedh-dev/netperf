@@ -1,16 +1,15 @@
 influx:
   url: "http://10.10.3.3:8086"
-  token: "-NEIYk4QEji8m3cxSqBAt3QIjs06H1TBKa4UkkqtsHKHkz5tOps0ivSPFw9arIf7a1pIA056OxmpAfKZ6_FPvw=="
+  token: ${INFLUX_TOKEN}
   org: "homelab"
   bucket: "networking"
 
 iperf:
-  name: code-servers
+  name: ${hostname}
   interval: 30
   servers:
     - name: storm 
       address: 10.10.1.1
-      port: 5201
       duration: 2
     - name: nemo
       address: 10.10.2.1
