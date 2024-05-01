@@ -88,7 +88,7 @@ main() {
         echo "[!] Unsupported distribution for package installation!!!"
         exit 1
     fi
-
+    sudo apt update
     # Ensure required packages are installed
     for package in "${package_names[@]}"; do
         ensure_package_installed $package
