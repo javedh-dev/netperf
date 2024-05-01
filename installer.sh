@@ -117,12 +117,15 @@ main() {
     # Create and activate virtual environment, install requirements, then deactivate
     create_virtualenv $venv_name $requirements_file
 
+    cp $work_dir/source/config.yaml $work_dir/config.yaml
+
     # Ensure required packages are installed
     for service in "${service_names[@]}"; do
         enable_and_start_service $service
     done
 
     echo "[+] Service, executable, and virtual environment created successfully."
+    rm -rf $work_dir/source
 }
 
 # Run the main function
