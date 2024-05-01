@@ -86,7 +86,7 @@ main() {
     local package_names=("python3" "iperf3" "git" "python3-venv" "python3-pip")
     local service_names=("iperf3" "netperf")
     local venv_name=".venv"
-    local requirements_file="requirements.txt"
+    local requirements_file="./source/requirements.txt"
     DEBIAN_FRONTEND=noninteractive 
 
     mkdir -p $work_dir
