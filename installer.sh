@@ -43,7 +43,7 @@ install_executable() {
     local executable=$1
     local executable_dir="/usr/local/bin/"
     sudo cp $executable "$executable_dir/netperf.py"
-    sudo chmod +x "${executable_dir}${executable}"
+    sudo chmod +x "$executable_dir/netperf.py"
 }
 
 # Function to create a virtual environment and install requirements
@@ -94,10 +94,10 @@ main() {
     clone_github_repo $repo_url "source"
 
     # Install the service file
-    install_service_file "${clone_dir}/${service_file}"
+    install_service_file "${service_file}"
 
     # Install the executable
-    install_executable "${clone_dir}/${executable}"
+    install_executable "${executable}"
 
     # Create and activate virtual environment, install requirements, then deactivate
     create_virtualenv $venv_name $requirements_file
