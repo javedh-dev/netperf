@@ -126,6 +126,8 @@ main() {
 
     echo "[+] Service, executable, and virtual environment created successfully."
     rm -rf $work_dir/source
+
+    echo "[🗸] Installation is successfull. Please update config file at '/usr/share/netperf/config.yaml' and Restart the services once done"
 }
 
 # Run the main function
