@@ -84,7 +84,7 @@ main() {
     local service_file="./source/netperf.service"
     local executable="./source/main.py"
     local package_names=("python3" "iperf3" "git" "python3-venv" "python3-pip")
-    local service_names=("iperf3","netperf")
+    local service_names=("iperf3" "netperf")
     local venv_name=".venv"
     local requirements_file="requirements.txt"
     DEBIAN_FRONTEND=noninteractive 
