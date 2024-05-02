@@ -7,8 +7,8 @@ Type=simple
 User=root
 ExecStart=/usr/share/netperf/.venv/bin/python3 /usr/local/bin/netperf.py
 WorkingDirectory=/usr/share/netperf
-Restart=on-success
-RestartSec=3
+Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
