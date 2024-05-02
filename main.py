@@ -63,22 +63,25 @@ def write_to_db(record):
 
 def gather_stats():
     for server in config["iperf"]["servers"]:
-        client = iperf3.Client()
-        client.server_hostname = server["address"]
-        client.port = server["port"]
-        client.duration = server["duration"]
-        result = client.run()
-        del client
+        try:
+            client = iperf3.Client()
+            client.server_hostname = server["address"]
+            client.port = server["port"]
+            client.duration = server["duration"]
+            result = client.run()
+            del client
 
-        logger.debug("Pushing data for server '%s'", server["name"])
-        record = (
-            influxdb_client.Point("speed")
-            .tag("source", config["iperf"]["name"])
-            .tag("destination", server["name"])
-            .field("upload", result.sent_Mbps)
-            .field("download", result.received_Mbps)
-        )
-        write_to_db(record)
+            logger.debug("Pushing data for server '%s'", server["name"])
+            record = (
+                influxdb_client.Point("speed")
+                .tag("source", config["iperf"]["name"])
+                .tag("destination", server["name"])
+                .field("upload", result.sent_Mbps)
+                .field("download", result.received_Mbps)
+            )
+            write_to_db(record)
+        except Exception as e:
+            logger.error("Failed to process stats for %s",server['name'],e)
 
 def setup_logging():
     global logger 
