@@ -16,7 +16,6 @@ ensure_package_installed() {
     local package_name=$1
     if ! dpkg -l | grep -q "^ii\s*$package_name\s"; then
         echo "[=] Installing $package_name..."
-        apt update
         DEBIAN_FRONTEND=noninteractive apt install -y $package_name
         echo "[🗸] $package_name installed successfully."
     else
