@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 from influxdb_client.client.write_api import SYNCHRONOUS
-from schema import Schema, And, Use, SchemaError
+from schema import Schema, And, Use, SchemaError, Regex
 import iperf3
 import influxdb_client
 import time
 import yaml
 import logging
+import os
 
 
 schema = Schema(
@@ -35,9 +36,10 @@ schema = Schema(
 
 def get_config():
     with open("config.yaml", "r") as file:
-        config = yaml.safe_load(file)
+        config_text = file.read()
+        config_text = os.path.expandvars(config_text)
+        config = yaml.safe_load(config_text)
         file.close()
-
     schema.validate(config)
     return config
 
@@ -73,15 +75,15 @@ def gather_stats():
 
             logger.debug("Pushing data for server '%s'", server["name"])
             record = (
-                influxdb_client.Point("speed")
+                influxdb_client.Point("bandwidth")
                 .tag("source", config["iperf"]["name"])
                 .tag("destination", server["name"])
                 .field("upload", result.sent_Mbps)
                 .field("download", result.received_Mbps)
             )
             write_to_db(record)
-        except Exception as e:
-            logger.error("Failed to process stats for %s",server['name'],e)
+        except Exception:
+            logger.error("Failed to process stats for %s", server['name'])
 
 def setup_logging():
     global logger 
@@ -94,6 +96,12 @@ def setup_logging():
     logger.addHandler(stream_handler)
     logger.addHandler(file_handler)
 
+def check_env():
+    if (os.environ["HOST_NAME"] and os.environ["INFLUX_TOKEN"]):
+        return True
+    else:
+        raise Exception("INFLUX_TOEKN or HOST_NAME environment variables not exists")
+        
 
 def configure():
     global config 
@@ -101,14 +109,18 @@ def configure():
     try:
         setup_logging()
         logger.info("Configuring the netperf...")
+        check_env()
         config = get_config()
         influx_write_api = initialize_influx()
     except FileNotFoundError as e:
-        logger.error("Please ensure that config.yaml file is present.", e)
+        logger.exception("Please ensure that config.yaml file is present.")
+        raise e
     except SchemaError as e:
-        logger.error("Validation failed : Please validate the schema for config.yaml file", e)
+        logger.exception("Validation failed : Please validate the schema for config.yaml file")
+        raise e
     except Exception as e:
-        logger.error("Runtime Error Occurred : ", e)
+        logger.exception("Runtime Error Occurred : ")
+        raise e
 
 def start():
     logger.info("Starting the netperf stats collector...")

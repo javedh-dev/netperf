@@ -5,11 +5,12 @@ influx:
   bucket: "networking"
 
 iperf:
-  name: ${hostname}
-  interval: 30
+  name: ${HOST_NAME}
+  interval: 60
   servers:
     - name: storm 
       address: 10.10.1.1
+      port: 5201
       duration: 2
     - name: nemo
       address: 10.10.2.1
