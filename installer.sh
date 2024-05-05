@@ -53,7 +53,7 @@ enable_and_start_service() {
     systemctl enable $service_name
 
     # Start the service
-    systemctl start $service_name
+    systemctl restart $service_name
 
     echo "[🗸] $service_name enabled and started."
 }
@@ -118,6 +118,7 @@ main() {
 
     cp $work_dir/source/config.yaml $work_dir/config.yaml
 
+    systemctl daemon-reload
     # Ensure required packages are installed
     for service in "${service_names[@]}"; do
         enable_and_start_service $service
