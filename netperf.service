@@ -5,6 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
+EnvironmentFile=/etc/environment
 ExecStart=/usr/share/netperf/.venv/bin/python3 /usr/local/bin/netperf.py
 WorkingDirectory=/usr/share/netperf
 Restart=always
