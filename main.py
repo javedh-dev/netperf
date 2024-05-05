@@ -97,7 +97,7 @@ def setup_logging():
     logger.addHandler(file_handler)
 
 def check_env():
-    if (os.environ["HOST_NAME"] and os.environ["INFLUX_TOKEN"]):
+    if (os.environ.get("HOST_NAME") and os.environ.get("INFLUX_TOKEN")):
         return True
     else:
         raise Exception("INFLUX_TOEKN or HOST_NAME environment variables not exists")
