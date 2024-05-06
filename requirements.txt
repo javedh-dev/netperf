@@ -2,3 +2,4 @@ iperf3
 influxdb-client
 pyyaml
 schema
+speedtest-cli

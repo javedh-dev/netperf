@@ -8,6 +8,7 @@ import time
 import yaml
 import logging
 import os
+import speedtest
 
 
 schema = Schema(
@@ -101,6 +102,18 @@ def check_env():
         return True
     else:
         raise Exception("INFLUX_TOEKN or HOST_NAME environment variables not exists")
+
+def calculate_speed():
+    st = speedtest.Speedtest(secure=True)
+    logger.debug("Pushing data for server Internet Speed")
+    record = (
+        influxdb_client.Point("speedtest")
+        .tag("source", config["iperf"]["name"])
+        .field("download", st.download())
+        .field("upload", st.upload())
+        .field("ping", st.results.ping)
+    )
+    write_to_db(record)
         
 
 def configure():
@@ -128,6 +141,7 @@ def start():
     while True:
         logger.debug("-"*50)
         gather_stats()
+        calculate_speed()
         logger.debug("-"*50)
         logger.debug("Sleeping for %ss.", sleep_time)
         time.sleep(sleep_time if sleep_time>=0 else 0)
