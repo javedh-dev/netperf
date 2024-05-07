@@ -9,6 +9,7 @@ import logging
 import os
 import speedtest
 from flask import Flask
+import waitress
 
 
 schema = Schema(
@@ -152,4 +153,4 @@ def ping():
 
 if __name__ == "__main__":
     configure()
-    app.run(port=2453)
+    waitress.serve(app, host="0.0.0.0", port="2453")

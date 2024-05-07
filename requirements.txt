@@ -4,3 +4,4 @@ pyyaml
 schema
 speedtest-cli
 flask
+waitress
