@@ -4,11 +4,11 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 from schema import Schema, And, Use, SchemaError
 import iperf3
 import influxdb_client
-import time
 import yaml
 import logging
 import os
 import speedtest
+from flask import Flask
 
 
 schema = Schema(
@@ -34,6 +34,7 @@ schema = Schema(
         }
     )
 
+app = Flask(__name__)
 
 def get_config():
     with open("config.yaml", "r") as file:
@@ -83,8 +84,9 @@ def gather_stats():
                 .field("download", result.received_Mbps)
             )
             write_to_db(record)
-        except Exception:
+        except Exception as e:
             logger.error("Failed to process stats for %s", server['name'])
+            print(e)
 
 def setup_logging():
     global logger 
@@ -105,7 +107,7 @@ def check_env():
 
 def calculate_speed():
     st = speedtest.Speedtest(secure=True)
-    logger.debug("Pushing data for server Internet Speed")
+    logger.debug("Calculating Internet Speed")
     record = (
         influxdb_client.Point("speedtest")
         .tag("source", config["iperf"]["name"])
@@ -135,17 +137,19 @@ def configure():
         logger.exception("Runtime Error Occurred : ")
         raise e
 
+@app.route("/stats", methods=["GET"])
 def start():
-    logger.info("Starting the netperf stats collector...")
-    sleep_time = int(config['iperf']['interval']) - sum(map(lambda n: int(n['duration']),config['iperf']['servers']))
-    while True:
-        logger.debug("-"*50)
-        gather_stats()
-        calculate_speed()
-        logger.debug("-"*50)
-        logger.debug("Sleeping for %ss.", sleep_time)
-        time.sleep(sleep_time if sleep_time>=0 else 0)
+    logger.info("Running netperf stats collector...")
+    logger.debug("-"*50)
+    gather_stats()
+    calculate_speed()
+    logger.debug("-"*50)
+    return "success"
+
+@app.route("/", methods=["GET"])
+def ping():
+    return "pong"
 
 if __name__ == "__main__":
     configure()
-    start()
+    app.run(port=2453)

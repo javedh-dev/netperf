@@ -3,3 +3,4 @@ influxdb-client
 pyyaml
 schema
 speedtest-cli
+flask

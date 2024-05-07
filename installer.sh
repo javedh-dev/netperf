@@ -89,7 +89,7 @@ main() {
     DEBIAN_FRONTEND=noninteractive 
 
     mkdir -p $work_dir
-    rm -rf $work_dir/*
+    # rm -rf $work_dir/*
     cd $work_dir
 
     if is_debian_based; then
@@ -116,7 +116,7 @@ main() {
     # Create and activate virtual environment, install requirements, then deactivate
     create_virtualenv $venv_name $requirements_file
 
-    cp $work_dir/source/config.yaml $work_dir/config.yaml
+    cp -n  $work_dir/source/config.yaml $work_dir/config.yaml || true
 
     systemctl daemon-reload
     # Ensure required packages are installed
